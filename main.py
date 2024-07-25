@@ -1,10 +1,8 @@
-from random import randint, sample
+from random import randint, shuffle
 import os
 import json
 import click
 import uuid
-
-roles = ["top", "mid", "bot", "sup", "jungle"]
 
 
 @click.command()
@@ -39,10 +37,12 @@ def generate(count, epoch_count, max_user_per_epoch):
             previous_epoch = epoch_uuid
             
             for _ in range(randint(1, max_user_per_epoch + 1)):
+                roles = ["top", "mid", "bot", "sup", "jungle"]
+                shuffle(roles)
                 user = {
                     "user_id": str(uuid.uuid4()),
                     "mmr": randint(500,10000),
-                    "roles": sample(roles, randint(1,5)),
+                    "roles": roles,
                     "waitingTime": randint(1,100)
                 }
                 epoch.append(user)
