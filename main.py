@@ -50,6 +50,7 @@ def generate(count, epoch_count, max_user_per_epoch):
             epoch_file.write(json.dumps(epoch))
             epoch_file.close()
         
+        test_collection[epoch_uuid] = '00000000-0000-0000-0000-000000000000'
         test_collection_file = open(os.path.join('tests', f'test_{test_index}', 'test.json'), 'w')
         test_collection_file.write(json.dumps(test_collection))
         test_collection_file.close()
