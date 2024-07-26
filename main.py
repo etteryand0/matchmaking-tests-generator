@@ -23,7 +23,9 @@ def generate(count, epoch_count, max_user_per_epoch):
     
     for test_index in range(len(dirs), len(dirs) + count):
         os.mkdir(os.path.join('tests', f'test_{test_index}'))
-        test_collection = {}
+        test_collection = {
+            "00000000-0000-0000-0000-000000000000": "00000000-0000-0000-0000-000000000000"
+        }
         previous_epoch = None
         
         for _ in range(epoch_count):
@@ -50,7 +52,7 @@ def generate(count, epoch_count, max_user_per_epoch):
             epoch_file.write(json.dumps(epoch))
             epoch_file.close()
         
-        test_collection[epoch_uuid] = '00000000-0000-0000-0000-000000000000'
+        test_collection["last"] = epoch_uuid
         test_collection_file = open(os.path.join('tests', f'test_{test_index}', 'test.json'), 'w')
         test_collection_file.write(json.dumps(test_collection))
         test_collection_file.close()
