@@ -18,7 +18,11 @@ import uuid
               default=20,
               prompt='Enter max number of users per epoch',
               help='Number of users per epoch')
-def generate(count, epoch_count, max_user_per_epoch):
+@click.option('--max-epoch-interval',
+              default=3600*4,
+              prompt='Enter max time between epoch',
+              help='Max time between epoches')
+def generate(count, epoch_count, max_user_per_epoch, max_epoch_interval):
     dirs = list(filter(lambda x: x.startswith('test_'),os.listdir('tests')))
     
     for test_index in range(len(dirs), len(dirs) + count):
@@ -26,6 +30,7 @@ def generate(count, epoch_count, max_user_per_epoch):
         test_collection = {
             "00000000-0000-0000-0000-000000000000": "00000000-0000-0000-0000-000000000000"
         }
+        intervals = {}
         previous_epoch = None
         
         for _ in range(epoch_count):
@@ -37,6 +42,7 @@ def generate(count, epoch_count, max_user_per_epoch):
                 test_collection[previous_epoch] = epoch_uuid
             
             previous_epoch = epoch_uuid
+            intervals[epoch_uuid] = randint(10,max_epoch_interval)
             
             for _ in range(randint(1, max_user_per_epoch + 1)):
                 roles = ["top", "mid", "bot", "sup", "jungle"]
@@ -51,6 +57,10 @@ def generate(count, epoch_count, max_user_per_epoch):
             epoch_file = open(os.path.join('tests', f'test_{test_index}', f'{epoch_uuid}.json'), 'w')
             epoch_file.write(json.dumps(epoch))
             epoch_file.close()
+            
+        intervals_file = open(os.path.join('tests', f'test_{test_index}', 'intervals.json'), 'w')
+        intervals_file.write(json.dumps(intervals))
+        intervals_file.close()
         
         test_collection["last"] = epoch_uuid
         test_collection_file = open(os.path.join('tests', f'test_{test_index}', 'test.json'), 'w')
